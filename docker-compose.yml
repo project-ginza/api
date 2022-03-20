@@ -1,0 +1,29 @@
+version: "3.7" # 파일 규격 버전
+volumes:
+  ginza-dbdata:
+services:
+  # DB
+  postgresql:
+    image: "postgres:alpine"
+    container_name: ginza-db
+    restart: always
+    volumes:
+      - ginza-dbdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=password1234 # only local use
+      - POSTGRES_USER=ginza
+      - POSTGRES_DB=ginzadb
+      - TZ= "Asia/Seoul"
+  # Redis
+  redis:
+    image: redis:alpine
+    command: redis-server --port 6379
+    container_name: ginza-cache
+    hostname: localhost
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - 6379:6379
