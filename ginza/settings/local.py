@@ -1,3 +1,4 @@
+from .base import *
 import environ, os
 
 env = environ.Env()
