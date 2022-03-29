@@ -10,9 +10,9 @@ Project Ginza에서 다음 기능을 담당하는 API.
 ## 2. 실행방법
 최초로 실행하는 경우, 먼저 마이그레이션을 통해 데이터베이스 세팅을 해주어야 합니다. 다음과 같이 진행합니다.
 ```shell
-$python manage.py makemigrations
-$python manage.py migrate
-$python manage.py createsuperuser
+$python manage.py makemigrations --settings=ginza.settings.{env}
+$python manage.py migrate --settings=ginza.settings.{env}
+$python manage.py createsuperuser --settings=ginza.settings.{env}
 ```
 
 그 다음에 실행 환경에 맞는 값을 입력하여 애플리케이션을 실행해 줍니다. 환경 변수 값은 다음과 같습니다.
