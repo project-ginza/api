@@ -27,6 +27,11 @@ $python manage.py createsuperuser
 $python manage.py runserver 8000 --settings=ginza.settings.{env}
 ```
 
+백그라운드로 실행하기를 희망하는 경우, 다음과 같이 실행합니다.
+```shell
+$nohup python manage.py runserver 8000 --settings=ginza.settings.{env} >> /applogs/ginza.out 2>&1 &
+```
+
 ## 3. 로깅 (이세영 의견)
 로그를 남기는 방법에 대해서 다음과 같은 여러 방식이 있지 않을까 생각이 들더라구요
 * 파일에 로그 남기기
