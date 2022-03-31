@@ -2,10 +2,7 @@ from django.db import connection
 from django.test import TransactionTestCase
 from django.test.utils import CaptureQueriesContext
 
-# Product Model Transaction Test
 from product.models import Category, Product, ProductStatus
-
-# Create your tests here.
 
 ROOT_CATEGORY = 'root-category'
 SUB_CATEGORY = 'sub-category'

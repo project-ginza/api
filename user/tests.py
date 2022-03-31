@@ -3,15 +3,17 @@ import logging
 from django.contrib.auth.hashers import check_password
 from django.db import connection
 from django.test import TransactionTestCase
-
-# Create your tests here.
-from user.models import User, UserTypeCategory, UserStatus
 from django.test.utils import CaptureQueriesContext
+
+from user.models import User, UserTypeCategory, UserStatus
 
 logger = logging.getLogger('api')
 
+RAW_PASSWORD = "1234"
+
 EMAIL_VALUE_ERROR_TXT = 'Please enter your email.'
 NAME_VALUE_ERROR_TXT = 'Please enter your name.'
+
 
 
 # User Model Transaction Test
@@ -20,7 +22,7 @@ class UserTestCase(TransactionTestCase):
         User.objects.create_user(
             name='tester',
             email='test@test.com',
-            password='1234'
+            password=RAW_PASSWORD
         )
         print("Set Up Test Models")
 
@@ -32,7 +34,8 @@ class UserTestCase(TransactionTestCase):
             print("=> test_user_password_encoding================")
             hashed_password = User.objects.get(name='tester').password
             print(*ctx.captured_queries, sep='\n')
-            self.assertTrue(check_password('1234', hashed_password))
+            self.assertNotEqual(RAW_PASSWORD, hashed_password.__str__())
+            self.assertTrue(check_password(RAW_PASSWORD, hashed_password))
             print("============================================")
 
     # TC2 : 사용자 상태와 사용자 종류의 Default 값은 각각 Active와 Normal이 되어야 한다.
