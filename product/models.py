@@ -8,7 +8,6 @@ class CategoryStatus(models.IntegerChoices):
 
 
 class Category(models.Model):
-
     # 레코드 생성시점
     created_at = models.DateTimeField(
         auto_now=True,
@@ -16,7 +15,11 @@ class Category(models.Model):
     )
 
     # 레코드 변경시점
-    modified_at = models.DateTimeField(default=None)
+    modified_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        default=None
+    )
 
     # 카테고리명
     name = models.CharField(

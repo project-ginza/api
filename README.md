@@ -32,6 +32,16 @@ $python manage.py runserver 8000 --settings=ginza.settings.{env}
 $nohup python manage.py runserver 8000 --settings=ginza.settings.{env} >> /applogs/ginza.out 2>&1 &
 ```
 
+### 2.1. 테스트
+* test 문맥에서는 로컬 DB 인스턴스가 아닌 sqlite에 붙도록 settings를 추가하였습니다.
+  * Project Root에 ```db.sqlite3``` 파일 필요.
+* test도 DB에 바인딩 되므로 ```migrate``` 가 필요할 듯합니다.
+```shell
+$python manage.py test --settings=ginza.settings.test
+```
+
+
+
 ## 3. 로깅 (이세영 의견)
 로그를 남기는 방법에 대해서 다음과 같은 여러 방식이 있지 않을까 생각이 들더라구요
 * 파일에 로그 남기기
