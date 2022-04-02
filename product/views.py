@@ -1,17 +1,13 @@
-from django.http import JsonResponse
 # Create your views here.
-from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from product.models import Product
-from util.serializer import serialize_product_list
+from product.serializer import serialize_product_list
 
 
-# TODO : api_view Test Required
-
-@api_view(['GET'])  # 일단 GET 만 정의
-def product_list(request):
-    if request.method == 'GET':
-        product_list = Product.objects.all()
-        # serializer = ProductSerializer(product_list, many=True)
-        serializer = serialize_product_list(product_list)
-        return JsonResponse(serializer, safe=False)
+class ProductList(APIView):
+    def get(self, request):
+        # product_list = [serialize_product(product) for product in Product.objects.all()]
+        serialized_product_list = serialize_product_list(Product.objects.all())
+        return Response(serialized_product_list)

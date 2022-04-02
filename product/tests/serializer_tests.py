@@ -5,9 +5,9 @@ import json
 from django.test import SimpleTestCase
 
 from product.models import Product, Category, ProductStatus
-from product.tests import ROOT_CATEGORY, SAMPLE_PRODUCT
-from util.serializer import serialize_product, serialize_product_list, ginza_general_json_serializer, \
+from product.serializer import serialize_product, serialize_product_list, ginza_general_json_serializer, \
     INVALID_TYPE_EXCEPTION_MESSAGE
+from product.tests.model_tests import SAMPLE_PRODUCT, ROOT_CATEGORY
 
 
 class CustomSerializerTestCase(SimpleTestCase):
