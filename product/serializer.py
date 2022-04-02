@@ -1,13 +1,10 @@
 import logging
 from typing import Dict, Any, List
 
-from django.core.serializers import serialize
-from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
-from django.http import HttpResponse
 from rest_framework import serializers
 
-from product.models import Product, ProductDetails
+from product.models import Product
 
 SERIALIZE_TYPE_ALLOW_LIST = [models.query.QuerySet, models.Model, ]
 

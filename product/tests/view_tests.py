@@ -30,9 +30,9 @@ class ProductApiTests(APITestCase):
     def test_product_list_retrieve(self):
         url = 'http://localhost:8000/'+API_COMMON_PATH+'products/'
         response = self.client.get(url)
-        # print("-------------------------------")
-        # print("[test_product_list_retrieve]")
-        # print(response.data)
-        response_data_expect = '[{"model": "product.product", "pk": 1, "fields": {"name": "product-sample", "short_description": "short-description", "category": 1, "status": 0}}]'
+        print("-------------------------------")
+        print("[test_product_list_retrieve]")
+        print(response.data)
+        response_data_expect = "[{'id': 1, 'name': 'product-sample', 'short_description': 'short-description', 'category': 'root-category', 'status': '0'}]"
         self.assertEqual(response.status_code, status.HTTP_200_OK)  # 200 OK만 가정
-        self.assertEqual(response_data_expect, response.data)
+        self.assertEqual(response_data_expect, response.data.__str__())

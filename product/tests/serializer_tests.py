@@ -5,7 +5,7 @@ import json
 from django.test import SimpleTestCase
 
 from product.models import Product, Category, ProductStatus
-from product.serializer import serialize_product, serialize_product_list, ginza_general_json_serializer, \
+from product.serializer import serialize_product, serialize_product_list, \
     INVALID_TYPE_EXCEPTION_MESSAGE
 from product.tests.model_tests import SAMPLE_PRODUCT, ROOT_CATEGORY
 
@@ -86,42 +86,6 @@ class CustomSerializerTestCase(SimpleTestCase):
 
         print(result)
         self.assertEqual(0, len(result))
-
-    # TC 5 : 커스텀 General JSON serializer 함수 테스트(Type Error : Not iterable)
-    def test_ginza_general_json_serializer_not_iterable(self):
-        # DRF에서는 Iterable Object가 아니면 serialize가 안되나봄...
-        with self.assertRaisesMessage(TypeError, "'Category' object is not iterable"):
-            ginza_general_json_serializer(
-                Category.objects.create(
-                    name=ROOT_CATEGORY
-                )
-            )
-
-    # TC 6 : 커스텀 General JSON serializer 함수 테스트(예외 처리)
-    def test_ginza_general_json_serializer_not_allowd_type_error(self):
-        # SERIALIZE_TYPE_ALLOW_LIST 에 없는 타입으로 직렬화 시도시 ValueError 리턴
-        with self.assertRaisesMessage(ValueError, INVALID_TYPE_EXCEPTION_MESSAGE):
-            ginza_general_json_serializer(
-                SampleClass
-            )
-
-    # TC 7 : 커스텀 General JSON serializer 함수 테스트
-    def test_ginza_general_json_serializer(self):
-        Category.objects.create(
-            name=ROOT_CATEGORY
-        )
-
-        result = ginza_general_json_serializer(
-            Category.objects.all()
-        )
-
-        print('-----------JSON Parsing Result --------------------------')
-        print(result)
-        print('-----------JSON Parsing Result --------------------------')
-        self.assertIsNotNone(result)
-        json_object = json.loads(result)
-        self.assertIsNotNone(json_object[0]['fields']) # JSON
-
 # =============================
 
 class SampleClass:
