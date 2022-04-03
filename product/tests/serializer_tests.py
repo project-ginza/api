@@ -1,12 +1,13 @@
 # =============================
 # Serializer Test
-import json
+import datetime
+from typing import Optional, Any
 
 from django.test import SimpleTestCase
 
-from product.models import Product, Category, ProductStatus
+from product.models import Product, Category, ProductStatus, ProductDetails, Currency
 from product.serializer import serialize_product, serialize_product_list, \
-    INVALID_TYPE_EXCEPTION_MESSAGE
+    INVALID_TYPE_EXCEPTION_MESSAGE, serialize_product_detail_info
 from product.tests.model_tests import SAMPLE_PRODUCT, ROOT_CATEGORY
 
 
@@ -86,6 +87,40 @@ class CustomSerializerTestCase(SimpleTestCase):
 
         print(result)
         self.assertEqual(0, len(result))
+
+    def test_serialize_product_detail_info(self):
+        Category.objects.create(
+            name=ROOT_CATEGORY,
+        )
+
+        product: Product = Product.objects.create(
+            name=SAMPLE_PRODUCT,
+            short_description="short-description",
+            category=Category.objects.get(name=ROOT_CATEGORY)
+        )
+
+        test_details = ProductDetails.objects.create(
+            product=product,
+            price=1000,
+            currency=Currency.KRW,
+            overview="제품 전반 설명",
+            scent="향 정보",
+            ingredients="제품 성분 정보",
+            info="주요사양정보",
+            modified_at=datetime.datetime.now()
+        )
+
+        result: Optional[dict[str, Any]] = serialize_product_detail_info(test_details)
+        print(result.__str__())
+        self.assertEqual(product.id, result['product_id'])
+        self.assertEqual(test_details.overview, result['product_overview'])
+        self.assertEqual(product.category.name, result['category_name'])
+        self.assertEqual(product.name, result['product_name'])
+        self.assertEqual(test_details.info, result['product_description'])
+        self.assertEqual(test_details.price, result['product_price'])
+        self.assertEqual(Currency.KRW.label, result['currency'])
+
+
 # =============================
 
 class SampleClass:
