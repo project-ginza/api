@@ -1,3 +1,4 @@
+from common.models import BaseModel
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
@@ -20,7 +21,10 @@ class UserTypeCategory(models.IntegerChoices):
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, name, password=None):
+    def create_user(self, user_id, email, name, password=None):
+        if not user_id:
+            raise ValueError('Please enter your ID.')
+
         if not email:
             raise ValueError('Please enter your email.')
 
@@ -28,6 +32,7 @@ class UserManager(BaseUserManager):
             raise ValueError('Please enter your name.')
 
         user = self.model(
+            user_id=user_id,
             email=self.normalize_email(email),
             name=name
         )
@@ -36,8 +41,9 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, name, password):
+    def create_superuser(self, user_id, email, name, password):
         user = self.create_user(
+            user_id=user_id,
             email=email,
             name=name,
             password=password
@@ -47,18 +53,14 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, BaseModel, PermissionsMixin):
 
     class Meta:
         db_table = 'user'
 
-    created_at = models.DateTimeField(
-        auto_now=True,
-        null=False
-    )
-
-    modified_at = models.DateTimeField(
-        null=True,
+    user_id = models.CharField(
+        max_length=100,
+        null=False,
         default=None
     )
 
