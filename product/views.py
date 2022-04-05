@@ -9,14 +9,14 @@ from product.serializer import serialize_product_list, serialize_product_detail_
 
 
 class ProductList(APIView):
-    def get(self, request) -> Response:
+    def get(self, request):
         # product_list = [serialize_product(product) for product in Product.objects.all()]
         serialized_product_list: List[dict[str, Any]] = serialize_product_list(Product.objects.all())
         return Response(serialized_product_list)
 
 
 class ProductDetailsView(APIView):
-    def get(self, request, **kwargs) -> Response:
+    def get(self, request, **kwargs):
         response: Optional[dict[str, Any]] = serialize_product_detail_info(ProductDetails \
                                                                            .objects \
                                                                            .select_related('product') \
@@ -26,7 +26,7 @@ class ProductDetailsView(APIView):
 
 
 class ProductReviewListView(APIView):
-    def get(self, request, **kwargs) -> Response:
+    def get(self, request, **kwargs):
         response: List[dict[str, Any]] = serialize_product_review_list(ProductReview \
                                                                        .objects \
                                                                        .filter(product__id=kwargs['product_id']) \
