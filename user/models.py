@@ -90,7 +90,7 @@ class User(AbstractBaseUser, BaseModel, PermissionsMixin):
     )
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    REQUIRED_FIELDS = ['name', 'user_id']
 
     objects = UserManager()
 
@@ -162,3 +162,5 @@ class Address(models.Model):
 
     class Meta:
         db_table = 'address'
+        verbose_name = 'address'
+        verbose_name_plural = 'addresses'
