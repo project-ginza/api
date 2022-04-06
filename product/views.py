@@ -41,8 +41,6 @@ class ProductReviewListView(APIView):
 class ProductSearchListView(APIView):
     def get(self, request, **kwargs):
         queryset = Product.objects.all()
-        # expressions = [(Q(filter=request.query_params[filter_field]) for filter_field in filtered_names if
-        #                 request.query_params[filter_field])]
         expressions =[]
         if request.query_params.get('product_name', False):
             expressions.append(Q(name__contains=request.query_params['product_name']))

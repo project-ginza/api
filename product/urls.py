@@ -1,9 +1,7 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from product.views import ProductList, ProductSearchListView
-from product.views import ProductDetailsView
-from product.views import ProductReviewListView
+from product.views import ProductList, ProductSearchListView, ProductDetailsView, ProductReviewListView
 from util.common import API_COMMON_PATH
 
 urlpatterns = [
