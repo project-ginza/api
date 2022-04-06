@@ -120,6 +120,3 @@ LOGGING = {
         },
     }
 }
-
-CSRF_USE_SESSIONS = True
-CSRF_COOKIE_HTTPONLY = False
