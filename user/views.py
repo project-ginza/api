@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -47,7 +48,25 @@ class SignupView(APIView):
 
         except Exception as e:
             resp = {
-                'msg': e
+                'msg': str(e)
             }
-            raise
+            return Response(resp)
 
+
+class LoginView(APIView):
+    def post(self, request):
+        data = request.data
+        email = data['email']
+        password = data['password']
+        user = authenticate(email=email, password=password)
+        if user is not None:
+            token = Token.objects.get(user=user)
+            return Response({"Token": token.key})
+        else:
+            return Response(status=401)
+
+
+class LogoutView(APIView):
+    def post(self, request):
+        response = logout(request)
+        return Response(response)
