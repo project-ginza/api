@@ -1,6 +1,9 @@
 # Create your views here.
+import operator
+from functools import reduce
 from typing import Optional, Any, List
 
+from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -32,4 +35,24 @@ class ProductReviewListView(APIView):
                                                                        .filter(product__id=kwargs['product_id']) \
                                                                        .select_related('user') \
                                                                        .order_by('created_at'))
+        return Response(response)
+
+
+class ProductSearchListView(APIView):
+    def get(self, request, **kwargs):
+        queryset = Product.objects.all()
+        # expressions = [(Q(filter=request.query_params[filter_field]) for filter_field in filtered_names if
+        #                 request.query_params[filter_field])]
+        expressions =[]
+        if request.query_params.get('product_name', False):
+            expressions.append(Q(name__contains=request.query_params['product_name']))
+        if request.query_params.get('category_id', False):
+            expressions.append(Q(category_id=request.query_params['category_id']))
+        if request.query_params.get('status', False):
+            expressions.append(Q(status=request.query_params['status']))
+
+        filtered_product_list = queryset.filter(reduce(operator.and_, expressions))
+        response: List[dict[str, Any]] = serialize_product_list(
+            filtered_product_list
+        )
         return Response(response)
