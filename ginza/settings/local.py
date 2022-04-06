@@ -76,7 +76,7 @@ LOGGING = {
             'style': '{',
         },
         'standard': {
-            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+            'format': '[%(asctime)s] %(levelname)s | %(funcName)s | %(name)s | %(message)s',
         },
     },
     'handlers': {
@@ -100,7 +100,7 @@ LOGGING = {
             'encoding': 'utf-8',
             'filters': ['require_debug_true'],
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': LOGGING_DIRECTORY + '/ginza.out',
+            'filename': LOGGING_DIRECTORY + '/ginza.log',
             'maxBytes': 1024 * 1024 * 5,
             'backupCount': 5,
             'formatter': 'standard',
