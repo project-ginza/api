@@ -1,3 +1,4 @@
+from common.models import BaseModel
 from django.db import models
 from user.models import User
 
@@ -7,19 +8,7 @@ class CategoryStatus(models.IntegerChoices):
     NOT_AVAILABLE = 1
 
 
-class Category(models.Model):
-    # 레코드 생성시점
-    created_at = models.DateTimeField(
-        auto_now=True,
-        null=False
-    )
-
-    # 레코드 변경시점
-    modified_at = models.DateTimeField(
-        null=True,
-        blank=True,
-        default=None
-    )
+class Category(BaseModel):
 
     # 카테고리명
     name = models.CharField(
@@ -76,14 +65,6 @@ class Product(models.Model):
 
 # 상품 이미지 저장 URL 보관 테이블
 class ProductImage(models.Model):
-    # 레코드 생성시점
-    created_at = models.DateTimeField(
-        auto_now=True,
-        null=False
-    )
-
-    # 레코드 변경시점
-    modified_at = models.DateTimeField(default=None)
 
     product = models.ForeignKey(
         Product,
@@ -106,14 +87,6 @@ class Currency(models.IntegerChoices):
 
 # 상품 상세 정보 테이블
 class ProductDetails(models.Model):
-    # 레코드 생성시점
-    created_at = models.DateTimeField(
-        auto_now=True,
-        null=False
-    )
-
-    # 레코드 변경시점
-    modified_at = models.DateTimeField(default=None)
 
     product = models.ForeignKey(
         Product,
@@ -153,18 +126,12 @@ class ProductDetails(models.Model):
 
     class Meta:
         db_table = 'product_details'
+        verbose_name = 'product_details'
+        verbose_name_plural = 'product_details'
 
 
 # 제품 리뷰 정보를 담는 테이블
 class ProductReview(models.Model):
-    # 레코드 생성시점
-    created_at = models.DateTimeField(
-        auto_now=True,
-        null=False
-    )
-
-    # 레코드 변경시점
-    modified_at = models.DateTimeField(default=None)
 
     product = models.ForeignKey(
         Product,
