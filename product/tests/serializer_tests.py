@@ -1,13 +1,12 @@
 # =============================
 # Serializer Test
-import datetime
 from typing import Optional, Any
 
 from django.test import SimpleTestCase
 
 from product.models import Product, Category, ProductStatus, ProductDetails, Currency
 from product.serializer import serialize_product, serialize_product_list, \
-    INVALID_TYPE_EXCEPTION_MESSAGE, serialize_product_detail_info
+    serialize_product_detail_info
 from product.tests.model_tests import SAMPLE_PRODUCT, ROOT_CATEGORY
 
 
@@ -107,7 +106,6 @@ class CustomSerializerTestCase(SimpleTestCase):
             scent="향 정보",
             ingredients="제품 성분 정보",
             info="주요사양정보",
-            modified_at=datetime.datetime.now()
         )
 
         result: Optional[dict[str, Any]] = serialize_product_detail_info(test_details)

@@ -35,7 +35,7 @@ class ProductStatus(models.IntegerChoices):
     NOT_AVAILABLE = 1
 
 
-class Product(models.Model):
+class Product(BaseModel):
     class Meta:
         db_table = 'product'
 
@@ -64,7 +64,7 @@ class Product(models.Model):
 
 
 # 상품 이미지 저장 URL 보관 테이블
-class ProductImage(models.Model):
+class ProductImage(BaseModel):
 
     product = models.ForeignKey(
         Product,
@@ -86,7 +86,7 @@ class Currency(models.IntegerChoices):
 
 
 # 상품 상세 정보 테이블
-class ProductDetails(models.Model):
+class ProductDetails(BaseModel):
 
     product = models.ForeignKey(
         Product,
@@ -131,7 +131,7 @@ class ProductDetails(models.Model):
 
 
 # 제품 리뷰 정보를 담는 테이블
-class ProductReview(models.Model):
+class ProductReview(BaseModel):
 
     product = models.ForeignKey(
         Product,
