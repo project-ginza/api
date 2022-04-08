@@ -1,3 +1,5 @@
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.views import exception_handler
 
 
@@ -9,5 +11,15 @@ def custom_exception_handler(exc, context):
     # Now add the HTTP status code to the response.
     if response is not None:
         response.data['status_code'] = response.status_code
+    else:
+        response = Response(
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            data={
+                'status_code': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                'error_message': '서버 에러 입니다.',
+                'error_details': repr(exc)
+            },
+            headers={'Content-Type': 'application/json; charset=utf-8'}
+        )
 
     return response
