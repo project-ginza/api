@@ -1,5 +1,3 @@
-import datetime
-
 from django.db import connection
 from django.test import TransactionTestCase
 from django.test.utils import CaptureQueriesContext
@@ -97,7 +95,6 @@ class ProductDetailsTestCase(TransactionTestCase):
                 scent="향 정보",
                 ingredients="제품 성분 정보",
                 info="주요사양정보",
-                modified_at=datetime.datetime.now()
             )
             pass
 
@@ -172,7 +169,8 @@ class ProductReviewTestCase(TransactionTestCase):
             test_user: User = User.objects.create(
                 name='tester',
                 email='test@test.com',
-                password=RAW_PASSWORD
+                password=RAW_PASSWORD,
+                user_id='test111'
             )
 
             test_product: Product = Product.objects.create(
@@ -182,7 +180,6 @@ class ProductReviewTestCase(TransactionTestCase):
             )
 
             ProductReview.objects.create(
-                modified_at=datetime.datetime.now(),
                 product=test_product,
                 title=REVIEW_TITLE+'-01',
                 details='details!!!',
@@ -191,7 +188,6 @@ class ProductReviewTestCase(TransactionTestCase):
             )
 
             ProductReview.objects.create(
-                modified_at=datetime.datetime.now(),
                 product=test_product,
                 title=REVIEW_TITLE+'-02',
                 details='details!!!',

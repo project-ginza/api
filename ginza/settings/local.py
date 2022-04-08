@@ -1,7 +1,7 @@
-from datetime import datetime
-from .base import *
-import environ
 import os
+from datetime import datetime
+import environ
+from .base import *
 
 now = datetime.now()
 str_now = now.strftime('%y%m%d')
@@ -81,7 +81,7 @@ LOGGING = {
     },
     'handlers': {
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
         },
@@ -119,6 +119,11 @@ LOGGING = {
         'api': {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
+        },
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
         },
     }
 }

@@ -1,6 +1,5 @@
-import datetime
-from django.test.utils import CaptureQueriesContext
 from django.core.handlers.wsgi import WSGIRequest
+from django.test.utils import CaptureQueriesContext
 from django.db import connection
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -36,7 +35,8 @@ class ProductApiTests(APITestCase):
         test_user: User = User.objects.create(
             name='tester',
             email='test@test.com',
-            password=RAW_PASSWORD
+            password=RAW_PASSWORD,
+            user_id='test111'
         )
 
         ProductDetails.objects.create(
@@ -47,11 +47,9 @@ class ProductApiTests(APITestCase):
             scent="향 정보",
             ingredients="제품 성분 정보",
             info="주요사양정보",
-            modified_at=datetime.datetime.now()
         )
 
         review_list = ProductReview.objects.create(
-            modified_at=datetime.datetime.now(),
             product=test_product,
             title=REVIEW_TITLE + '-01',
             details='details!!!',
@@ -122,7 +120,8 @@ class ProductSearchViewApiTest(APITestCase):
         test_user: User = User.objects.create(
             name='tester',
             email='test@test.com',
-            password=RAW_PASSWORD
+            password=RAW_PASSWORD,
+            user_id='test111'
         )
 
         ProductDetails.objects.create(
@@ -133,7 +132,6 @@ class ProductSearchViewApiTest(APITestCase):
             scent="향 정보",
             ingredients="제품 성분 정보",
             info="주요사양정보",
-            modified_at=datetime.datetime.now()
         )
         pass
 
