@@ -1,3 +1,5 @@
+from unittest.mock import MagicMock
+
 from django.core.handlers.wsgi import WSGIRequest
 from django.test.utils import CaptureQueriesContext
 from django.db import connection
@@ -5,6 +7,8 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from product.models import Category, Product, ProductDetails, Currency, ProductReview
+from product.services import ProductReviewService
+from product.tests.fixtures import test_fixture_all_set
 from product.tests.model_tests import ROOT_CATEGORY, SUB_CATEGORY, SAMPLE_PRODUCT, REVIEW_TITLE
 from user.models import User
 from user.tests import RAW_PASSWORD
@@ -147,6 +151,7 @@ class ProductSearchViewApiTest(APITestCase):
     WHERE 
         "product"."name" LIKE \'%product-sample1%\' ESCAPE \'\\\''
     """
+
     def test_product_search_name_keyword(self):
         with CaptureQueriesContext(connection) as ctx:
             url: str = GINZA_API_LOCAL_HOST + API_COMMON_PATH + 'products/search?product_name=' + SAMPLE_PRODUCT[0:3]
@@ -173,13 +178,16 @@ class ProductSearchViewApiTest(APITestCase):
         AND 
         "product"."category_id" = 1)'
     """
+
     def test_product_search_name_keyword_and_category_id(self):
         with CaptureQueriesContext(connection) as ctx:
-            url: str = GINZA_API_LOCAL_HOST + API_COMMON_PATH + 'products/search?product_name=' + SAMPLE_PRODUCT[0:5] + '&category_id=1'
+            url: str = GINZA_API_LOCAL_HOST + API_COMMON_PATH + 'products/search?product_name=' + SAMPLE_PRODUCT[
+                                                                                                  0:5] + '&category_id=1'
             print("URL : " + url)
             response: WSGIRequest = self.client.get(url)
             print("-------------------------------")
-            print(*ctx.captured_queries, sep='\n') # TODO : SELECT * FROM product_category where category_id = ?;  쿼리가 한번더 나가는 것으로 보임.
+            print(*ctx.captured_queries,
+                  sep='\n')  # TODO : SELECT * FROM product_category where category_id = ?;  쿼리가 한번더 나가는 것으로 보임.
             print("[test_product_search_name_keyword_and_category_id]")
             print(response.data)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -201,9 +209,11 @@ class ProductSearchViewApiTest(APITestCase):
         AND 
         "product"."status" = 1
     """
+
     def test_product_search_full_conditions(self):
         with CaptureQueriesContext(connection) as ctx:
-            url: str = GINZA_API_LOCAL_HOST + API_COMMON_PATH + 'products/search?product_name=' + SAMPLE_PRODUCT[0:5] + '&category_id=1&status=1'
+            url: str = GINZA_API_LOCAL_HOST + API_COMMON_PATH + 'products/search?product_name=' + SAMPLE_PRODUCT[
+                                                                                                  0:5] + '&category_id=1&status=1'
             print("URL : " + url)
             response: WSGIRequest = self.client.get(url)
             print("-------------------------------")
@@ -212,3 +222,12 @@ class ProductSearchViewApiTest(APITestCase):
             print(response.data)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             # self.assertEqual(response_data_expect, response.data.__str__())
+
+
+class ProductReviewAuthApiViewTest():
+    def setUp(self):
+        test_fixture_all_set()
+
+    def test_product_review_create_rollback_test(self):
+        mock_product_review_service = ProductReviewService()
+        mock_product_review_service = MagicMock()
