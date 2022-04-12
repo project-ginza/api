@@ -67,7 +67,7 @@ class ProductApiTests(APITestCase):
         pass
 
     def test_product_list_retrieve(self):
-        url = GINZA_API_LOCAL_HOST + API_COMMON_PATH + 'products/'
+        url = GINZA_API_LOCAL_HOST + API_COMMON_PATH + 'products'
         response = self.client.get(url)
         print("-------------------------------")
         print("[test_product_list_retrieve]")
