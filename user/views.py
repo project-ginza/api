@@ -40,7 +40,7 @@ class SignupView(APIView):
                 agreed_with_mkt_info_subscription=agreed_with_mkt_info_subscription,
             )
 
-            profile.save()
+            # profile.save()
 
             token = Token.objects.create(user=user)
 

@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from common.views import GinzaCommonAuthAPIView
+from product.serializer import serialize_product_review
 from product.services import ProductService, ProductDetailsService, ProductReviewService
 
 product_service = ProductService()
@@ -37,7 +38,8 @@ class ProductReviewAuthApiView(GinzaCommonAuthAPIView):
     def post(self, request, **kwargs):
         return product_review_service.register_product_review(kwargs['product_id'],
                                                               request.user,
-                                                              request.data)
+                                                              request.data,
+                                                              serialize_product_review)
 
     def put(self, request, **kwargs):
         return product_review_service.modify_product_review(kwargs['review_id'],

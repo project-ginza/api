@@ -1,6 +1,6 @@
 import operator
 from functools import reduce
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Callable
 
 from django.db.models import Q
 from rest_framework.response import Response
@@ -50,7 +50,8 @@ class ProductReviewService:
                                              .order_by('created_at'))
 
     @ginza_transactional
-    def register_product_review(self, product_id: int, user: User, input: Dict[str, Any]) -> Response:
+    def register_product_review(self, product_id: int, user: User, input: Dict[str, Any], serializer: Callable[
+        [ProductReview], Dict[str, Any]]) -> Response:
         # TODO : 주문 도메인 구성 후 실제 해당 유저가 주문한 상품인지 판단하는 로직 추가 필요.
         try:
             searched_product = Product.objects.get(id=product_id, status=ProductStatus.AVAILABLE)
@@ -65,7 +66,7 @@ class ProductReviewService:
             details=input.get('details')
         )
         # raise Exception("테스트") # 여기서 Exception이 Throw 되면 ProductReview Rollback 진행
-        return Response(serialize_product_review(saved_product))
+        return Response(serializer(saved_product))
 
     @ginza_transactional
     def modify_product_review(self, review_id: int, user: User, input: Dict[str, Any]) -> Response:

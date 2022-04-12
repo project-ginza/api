@@ -12,19 +12,19 @@ def test_fixture_all_set():
 
     Category.objects.create(
         name=SUB_CATEGORY,
-        upper_category_id=Category.objects.get(name=ROOT_CATEGORY).id
+        upper_category_id=Category.objects.filter(name=ROOT_CATEGORY).latest('id').id
     )
 
     test_product1: Product = Product.objects.create(
         name=SAMPLE_PRODUCT + "1",
         short_description="short-description",
-        category=Category.objects.get(name=ROOT_CATEGORY)
+        category=Category.objects.filter(name=ROOT_CATEGORY).latest('id')
     )
 
     test_product2: Product = Product.objects.create(
         name=SAMPLE_PRODUCT + "2",
         short_description="short-description",
-        category=Category.objects.get(name=SUB_CATEGORY)
+        category=Category.objects.filter(name=ROOT_CATEGORY).latest('id')
     )
 
     test_user: User = User.objects.create(
