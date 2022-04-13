@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth import authenticate, logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -5,6 +7,7 @@ from rest_framework.authtoken.models import Token
 
 from user.models import User, UserProfile
 
+logger = logging.getLogger('api')
 
 class SignupView(APIView):
     def post(self, request, *args, **kwargs):
@@ -37,7 +40,7 @@ class SignupView(APIView):
                 agreed_with_mkt_info_subscription=agreed_with_mkt_info_subscription,
             )
 
-            profile.save()
+            # profile.save()
 
             token = Token.objects.create(user=user)
 
@@ -47,10 +50,8 @@ class SignupView(APIView):
             return Response(resp)
 
         except Exception as e:
-            resp = {
-                'msg': str(e)
-            }
-            return Response(resp)
+            logger.error('Exception occurred while authentication ' + e)
+            raise e
 
 
 class LoginView(APIView):
