@@ -1,17 +1,25 @@
+from unittest.mock import MagicMock, Mock
+
 from django.core.handlers.wsgi import WSGIRequest
 from django.test.utils import CaptureQueriesContext
 from django.db import connection
 from rest_framework import status
+from django.test import TransactionTestCase
 from rest_framework.test import APITestCase
 
 from product.models import Category, Product, ProductDetails, Currency, ProductReview
+from product.serializer import serialize_product_review
+from product.services import ProductReviewService
+from product.tests.fixtures import test_fixture_all_set
 from product.tests.model_tests import ROOT_CATEGORY, SUB_CATEGORY, SAMPLE_PRODUCT, REVIEW_TITLE
 from user.models import User
 from user.tests import RAW_PASSWORD
 from util.common import API_COMMON_PATH, GINZA_API_LOCAL_HOST
 
-
 # -- https://www.django-rest-framework.org/api-guide/testing/#api-test-cases
+
+product_review_service = ProductReviewService()
+TRANSACTION_ROLLBACK_MESSAGE = '롤백 테스트 메시지'
 
 
 class ProductApiTests(APITestCase):
@@ -59,7 +67,7 @@ class ProductApiTests(APITestCase):
         pass
 
     def test_product_list_retrieve(self):
-        url = GINZA_API_LOCAL_HOST + API_COMMON_PATH + 'products/'
+        url = GINZA_API_LOCAL_HOST + API_COMMON_PATH + 'products'
         response = self.client.get(url)
         print("-------------------------------")
         print("[test_product_list_retrieve]")
@@ -147,6 +155,7 @@ class ProductSearchViewApiTest(APITestCase):
     WHERE 
         "product"."name" LIKE \'%product-sample1%\' ESCAPE \'\\\''
     """
+
     def test_product_search_name_keyword(self):
         with CaptureQueriesContext(connection) as ctx:
             url: str = GINZA_API_LOCAL_HOST + API_COMMON_PATH + 'products/search?product_name=' + SAMPLE_PRODUCT[0:3]
@@ -173,13 +182,16 @@ class ProductSearchViewApiTest(APITestCase):
         AND 
         "product"."category_id" = 1)'
     """
+
     def test_product_search_name_keyword_and_category_id(self):
         with CaptureQueriesContext(connection) as ctx:
-            url: str = GINZA_API_LOCAL_HOST + API_COMMON_PATH + 'products/search?product_name=' + SAMPLE_PRODUCT[0:5] + '&category_id=1'
+            url: str = GINZA_API_LOCAL_HOST + API_COMMON_PATH + 'products/search?product_name=' + SAMPLE_PRODUCT[
+                                                                                                  0:5] + '&category_id=1'
             print("URL : " + url)
             response: WSGIRequest = self.client.get(url)
             print("-------------------------------")
-            print(*ctx.captured_queries, sep='\n') # TODO : SELECT * FROM product_category where category_id = ?;  쿼리가 한번더 나가는 것으로 보임.
+            print(*ctx.captured_queries,
+                  sep='\n')  # TODO : SELECT * FROM product_category where category_id = ?;  쿼리가 한번더 나가는 것으로 보임.
             print("[test_product_search_name_keyword_and_category_id]")
             print(response.data)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -201,9 +213,11 @@ class ProductSearchViewApiTest(APITestCase):
         AND 
         "product"."status" = 1
     """
+
     def test_product_search_full_conditions(self):
         with CaptureQueriesContext(connection) as ctx:
-            url: str = GINZA_API_LOCAL_HOST + API_COMMON_PATH + 'products/search?product_name=' + SAMPLE_PRODUCT[0:5] + '&category_id=1&status=1'
+            url: str = GINZA_API_LOCAL_HOST + API_COMMON_PATH + 'products/search?product_name=' + SAMPLE_PRODUCT[
+                                                                                                  0:5] + '&category_id=1&status=1'
             print("URL : " + url)
             response: WSGIRequest = self.client.get(url)
             print("-------------------------------")
@@ -212,3 +226,87 @@ class ProductSearchViewApiTest(APITestCase):
             print(response.data)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             # self.assertEqual(response_data_expect, response.data.__str__())
+
+
+class ProductReviewAuthApiViewTest(TransactionTestCase):
+    def setUp(self):
+        test_fixture_all_set()
+
+    # 리뷰 저장 롤백 테스트
+    def test_product_review_create_rollback_test(self):
+        with CaptureQueriesContext(connection) as ctx:
+            mock_serializer = Mock(serialize_product_review, side_effect=ValueError(TRANSACTION_ROLLBACK_MESSAGE))
+            with self.assertRaisesMessage(ValueError, TRANSACTION_ROLLBACK_MESSAGE):
+                product_review_service.register_product_review(
+                    Product.objects.get(
+                        name=SAMPLE_PRODUCT + "1"
+                    ).id,
+                    User.objects.get(
+                        name='tester',
+                    ),
+                    {
+                        'review_image_url': '1111',
+                        'title': 'title',
+                        'details': 'details'
+                    },
+                    mock_serializer
+                )
+
+            print(*ctx.captured_queries,
+                  sep='\n')
+            with self.assertRaises(ProductReview.DoesNotExist):
+                ProductReview.objects.get(title='title')
+
+    # 리뷰 정상 저장 테스트
+    def test_product_review_create_commit_test(self):
+        with CaptureQueriesContext(connection) as ctx:
+            product_review_service.register_product_review(
+                Product.objects.filter(
+                    name=SAMPLE_PRODUCT + "1"
+                ).last().id,
+                User.objects.filter(
+                    name='tester',
+                ).last(),
+                {
+                    'review_image_url': '1111',
+                    'title': 'title',
+                    'details': 'details'
+                },
+                serialize_product_review
+            )
+
+        print(*ctx.captured_queries, sep='\n')
+        searched_review = ProductReview.objects.filter(title='title')
+        self.assertIsNotNone(searched_review)
+
+    # 리뷰 정상 수정 테스트
+    def test_product_review_update_commit_test(self):
+        with CaptureQueriesContext(connection) as ctx:
+            saved_review = ProductReview.objects.create(
+                product=Product.objects.filter(
+                    name=SAMPLE_PRODUCT + "1"
+                ).last(),
+                user=User.objects.filter(
+                    name='tester',
+                ).last(),
+                attached_image_url='1111',
+                title='title',
+                details='details'
+            )
+
+            self.assertEquals('1111', saved_review.attached_image_url)
+            self.assertEquals('title', saved_review.title)
+            self.assertEquals('details', saved_review.details)
+
+            product_review_service.modify_product_review(saved_review.id, User.objects.filter(
+                name='tester',
+            ).last(), {
+                                                             'review_image_url': 'url123',
+                                                             'title': 'eltit',
+                                                             'details': 'sliated'
+                                                         })
+            updated_review = ProductReview.objects.get(id=saved_review.id)
+            self.assertEquals(saved_review.id, updated_review.id)
+            self.assertEquals('url123', updated_review.attached_image_url)
+            self.assertEquals('eltit', updated_review.title)
+            self.assertEquals('sliated', updated_review.details)
