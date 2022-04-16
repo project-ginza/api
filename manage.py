@@ -9,7 +9,7 @@ logger = logging.getLogger('api')
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ginza.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ginza.settings.test')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
