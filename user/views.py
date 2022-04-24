@@ -13,7 +13,6 @@ class SignupView(APIView):
     def post(self, request, *args, **kwargs):
         try:
             data = request.data
-            user_id = data['user_id']
             email = data['email']
             password = data['password']
             name = data['name']
@@ -26,11 +25,8 @@ class SignupView(APIView):
             user = User.objects.create_user(
                 email=email,
                 password=password,
-                user_id=user_id,
                 name=name
             )
-
-            user.save()
 
             profile = UserProfile.objects.create(
                 user=user,
@@ -40,8 +36,6 @@ class SignupView(APIView):
                 agreed_with_mkt_info_subscription=agreed_with_mkt_info_subscription,
             )
 
-            # profile.save()
-
             token = Token.objects.create(user=user)
 
             resp = {
@@ -50,7 +44,7 @@ class SignupView(APIView):
             return Response(resp)
 
         except Exception as e:
-            logger.error('Exception occurred while authentication ' + e)
+            logger.error('An exception occurred while authentication '.format(e))
             raise e
 
 
