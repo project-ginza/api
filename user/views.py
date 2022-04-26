@@ -1,12 +1,9 @@
 import logging
-import uuid
 
 from django.contrib.auth import authenticate, logout
-from django.core.cache import cache
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
 
 from user.models import User, UserProfile
 
@@ -40,11 +37,10 @@ class SignupView(APIView):
                 agreed_with_mkt_info_subscription=agreed_with_mkt_info_subscription,
             )
 
-            session_key = str(uuid.uuid4())
-            cache.set(email, session_key)
+            token = Token.objects.create(user=user)
 
             resp = {
-                'session_key': session_key
+                'token': token.key
             }
             return Response(resp)
 
@@ -60,20 +56,13 @@ class LoginView(APIView):
         password = data['password']
         user = authenticate(email=email, password=password)
         if user is not None:
-            session_key = str(uuid.uuid4())
-            cache.set(email, session_key)
-            resp = {
-                'session_key': session_key
-            }
-            return Response(resp)
+            token = Token.objects.get(user=user)
+            return Response({"Token": token.key})
         else:
             return Response(status=401)
 
 
 class LogoutView(APIView):
-    # authentication_classes = [SessionAuthentication]
-    # permission_classes = [IsAuthenticated]
     def post(self, request):
         response = logout(request)
-        d = cache.get('marshall.s.lee@gmail.com')
         return Response(response)
