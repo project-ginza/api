@@ -9,6 +9,7 @@ from user.models import User, UserProfile
 
 logger = logging.getLogger('api')
 
+
 class SignupView(APIView):
     def post(self, request, *args, **kwargs):
         try:
