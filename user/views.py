@@ -6,6 +6,7 @@ import os
 from django.contrib.auth import authenticate, logout
 from ginza.redis import redis_conn
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from user.models import User, UserProfile
@@ -74,7 +75,7 @@ class LoginView(APIView):
             redis_conn.set(token, json.dumps(_dict))
 
             resp = {
-                'session_key': token
+                'token': token
             }
             return Response(resp)
         else:
@@ -82,6 +83,10 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
+        key = request.auth
+        redis_conn.delete(key)
         response = logout(request)
         return Response(response)
