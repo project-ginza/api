@@ -45,7 +45,7 @@ jobs:
         id: deploy
         run: |
           aws deploy create-deployment \
-            --application-name django-test-codedeploy \
-            --deployment-group-name django-test-codedeploy-group \
+            --application-name ginza-api-dev-deploy \
+            --deployment-group-name ginza-api-dev-deploy \
             --deployment-config-name CodeDeployDefault.OneAtATime \
             --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
