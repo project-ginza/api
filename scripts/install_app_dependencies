@@ -3,6 +3,8 @@
 cd /home/ec2-user
 git clone https://github.com/project-ginza/api.git
 sudo chmod -R 755 /home/ec2-user/api
+sudo mkdir ./api/applogs
 pip install -r requirements.txt
+sudo cat > ./api/applogs/ginza.log
 python3 manage.py makemigrations --settings=ginza.settings.dev
 python3 manage.py migrate --settings=ginza.settings.dev
