@@ -45,7 +45,8 @@ jobs:
       - name: Create CodeDeploy Deployment
         id: deploy
         run: |
-          aws deploy --region us-east-1a create-deployment \
+          aws deploy create-deployment \
+            --region us-east-1 \
             --application-name ginza-api-dev-deploy \
             --deployment-group-name ginza-api-dev-deploy \
             --deployment-config-name CodeDeployDefault.OneAtATime \
