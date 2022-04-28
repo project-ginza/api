@@ -10,7 +10,7 @@ env = environ.Env()
 BASE_DIR = os.path.abspath("/home/ec2-user")
 
 ALLOWED_HOSTS = [
-    'ec2-3-88-230-201.compute-1.amazonaws.com'
+    '*'
 ]
 
 # Take environment variables from .env file
@@ -19,7 +19,7 @@ environ.Env.read_env(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG')
+DEBUG = False
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str('SECRET_KEY')
