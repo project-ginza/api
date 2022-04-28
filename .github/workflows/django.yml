@@ -1,6 +1,5 @@
 name: ginza-dev-action
 
-
 on:
   push:
     branches: [ develop ]
