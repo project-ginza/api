@@ -2,4 +2,3 @@
 
 cd /home/ec2-user
 git clone https://github.com/project-ginza/api.git
-pip install -r requirements.txt
