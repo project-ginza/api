@@ -10,8 +10,7 @@ env = environ.Env()
 BASE_DIR = os.path.abspath("/home/ec2-user")
 
 ALLOWED_HOSTS = [
-    'localhost',
-    '.ap-us-east-1.compute'
+    'ec2-3-88-230-201.compute-1.amazonaws.com'
 ]
 
 # Take environment variables from .env file
