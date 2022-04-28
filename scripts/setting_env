@@ -5,4 +5,4 @@ sudo mkdir ./applogs
 sudo chmod -R 777 /home/ec2-user/api
 sudo cat > ./applogs/ginza.log
 sudo chmod -R 777 ./applogs/ginza.log
-pip install -r requirements.txt
+

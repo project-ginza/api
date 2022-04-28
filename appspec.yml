@@ -20,5 +20,5 @@ hooks:
     timeout: 60
   ApplicationStart:
   - location: scripts/start_server
-    runas: root
+    runas: ec2-user
     timeout: 60
