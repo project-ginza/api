@@ -2,9 +2,8 @@
 
 cd /home/ec2-user/api
 sudo mkdir ./applogs
-sudo chmod -R 755 /home/ec2-user/api
-pip install -r requirements.txt
+sudo chmod -R 777 /home/ec2-user/api
 sudo cat > ./applogs/ginza.log
-sudo chmod -R 755 ./applogs/ginza.log
+sudo chmod -R 777 ./applogs/ginza.log
 python3 manage.py makemigrations --settings=ginza.settings.dev
 python3 manage.py migrate --settings=ginza.settings.dev
