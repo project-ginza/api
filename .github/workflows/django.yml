@@ -48,6 +48,6 @@ jobs:
           aws deploy create-deployment \
             --region us-east-1 \
             --application-name ginza-api-dev-deploy \
-            --deployment-group-name ginza-api-dev-deploy \
+            --deployment-group-name ginza-api-dev-deploy-group \
             --deployment-config-name CodeDeployDefault.OneAtATime \
             --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
