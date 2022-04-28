@@ -3,3 +3,14 @@ os: linux
 files:
   - source:  /
     destination: /home/ec2-user/build/
+hooks:
+  BeforeInstall:
+  - location: scripts/remove_server
+    timeout: 600
+    runas: root
+  Install:
+  - location: scripts/install_app_dependencies
+    runas: root
+  ApplicationStart:
+  - location: scripts/start_server
+    runas: root
