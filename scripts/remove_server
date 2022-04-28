@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd /home/ec2-user
-rm -rf ./api
+sudo rm -rf ./api

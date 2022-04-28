@@ -1,3 +1,5 @@
+# docker로 배포해야지 codedeploy 방식은 너무 손이 많이갑니다...
+
 version: 0.0
 os: linux
 files:

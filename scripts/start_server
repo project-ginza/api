@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd /home/ec2-user/api
-python manage.py runserver 8000 --settings=ginza.settings.local
+python manage.py runserver 8000 --settings=ginza.settings.dev
