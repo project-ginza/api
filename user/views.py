@@ -103,7 +103,7 @@ class KakaoOAuthLoginCallbackView(APIView):
         data = {
             'grant_type': 'authorization_code',
             'client_id': settings.KAKAO_REST_API_KEY,
-            'redirection_uri': settings.KAKAO_REDIRECTION_URI,
+            'redirection_uri': settings.KAKAO_REDIRECT_URI,
             'code': auth_code
         }
         token_response = requests.post(kakao_token_api, data=data)
