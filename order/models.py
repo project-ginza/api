@@ -23,8 +23,6 @@ class BasketHeader(BaseModel):
 class BasketLine(BaseModel):
     header = models.ForeignKey("order.BasketHeader", on_delete=models.CASCADE)
     product = models.ManyToManyField("product.Product", through="order.ProductBasketLine" ,on_delete=models.PROTECT)
-    price = models.PositiveIntegerField()
-    quantity = models.PositiveIntegerField()
     
     class Meta:
         db_table = "basket_line"
@@ -33,6 +31,8 @@ class BasketLine(BaseModel):
 class ProductBasketLine(BaseModel):
     product = models.ForeignKey("product.Product", on_delete=models.CASCADE)
     basket = models.ForeignKey("product.BasketLine", on_delete=models.CASCADE)
+    price = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
     
     class Meta:
         db_table="product_basket_line"
@@ -51,8 +51,6 @@ class OrderHeader(BaseModel):
 class OrderLine(BaseModel):
     header = models.ForeignKey("OrderHeader", on_delete=models.CASCADE)
     product = models.ManyToManyField("product.Product", on_delete=models.PROTECT,through="order.ProductOrderLine")
-    price = models.PositiveIntegerField()
-    quantity = models.PositiveIntegerField()
     
     class Meta:
         db_table = "order_line"
@@ -61,6 +59,8 @@ class OrderLine(BaseModel):
 class ProductOrderLine(BaseModel):
     product = models.ForeignKey("product.Product", on_delete=models.CASCADE)
     order = models.ForeignKey("order.OrderLine", on_delete=models.CASCADE)
+    price = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
     
     class Meta:
         db_table = "product_order_line"
