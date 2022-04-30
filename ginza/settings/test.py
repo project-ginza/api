@@ -25,11 +25,11 @@ DEBUG = True
 SECRET_KEY = env.str('SECRET_KEY')
 
 # Database
-# DB_NAME = env.str('DB_NAME')
-# DB_USER = env.str('DB_USER')
-# DB_PASSWORD = env.str('DB_PASSWORD')
-# DB_HOST = env.str('DB_HOST')
-# DB_PORT = env.str('DB_PORT')
+DB_NAME = env.str('DB_NAME')
+DB_USER = env.str('DB_USER')
+DB_PASSWORD = env.str('DB_PASSWORD')
+DB_HOST = env.str('DB_HOST')
+DB_PORT = env.str('DB_PORT')
 
 DATABASES = {
     'default': {
@@ -39,23 +39,23 @@ DATABASES = {
     }
 }
 
-# REDIS_HOST = env.str('REDIS_HOST')
-# REDIS_PORT = env.str('REDIS_PORT')
-# REDIS_DB = env.str('REDIS_DB')
-# REDIS_URL = 'redis://{}:{}/{}'.format(REDIS_HOST, REDIS_PORT, REDIS_DB)
+REDIS_HOST = env.str('REDIS_HOST')
+REDIS_PORT = env.str('REDIS_PORT')
+REDIS_DB = env.str('REDIS_DB')
+REDIS_URL = 'redis://{}:{}/{}'.format(REDIS_HOST, REDIS_PORT, REDIS_DB)
 
-# connect with Redis
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': REDIS_URL,
-#         'OPTIONS': {
-#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-#         }
-#     }
-# }
+connect with Redis
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': REDIS_URL,
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
 
-#LOGGING_DIRECTORY = env.str('LOGGING_DIRECTORY')
+LOGGING_DIRECTORY = env.str('LOGGING_DIRECTORY')
 
 LOGGING = {
     'version': 1,

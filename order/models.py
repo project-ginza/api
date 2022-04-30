@@ -1,9 +1,7 @@
 from django.db import models
 from common.models import BaseModel
 
-'''
-orderstatus enum으로 바꾸기
-'''
+
 class OrderStatus(models.IntegerChoices):    
     SUCCESS = 0   #주문완료
     ARRIVE = 1    #배송완료
@@ -15,21 +13,34 @@ class PaymentStatus(models.IntegerChoices):
     DEPOSIT = 2  #무통장입금
 
 class Basket(BaseModel):
-    product = models.ForeignKey("product.ProductDetails", on_delete=models.PROTECT)
+    product = models.ManyToManyField("product.Product", through="order.ProductBasket" ,on_delete=models.PROTECT)
     user = models.ForeignKey("user.User", on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField()
     
     class Meta:
         db_table = "basket"
+        
 
-class Order(BaseModel):
-    product = models.ForeignKey("product.ProductDetails", on_delete=models.PROTECT, null=True)
+class ProductBasket(BaseModel):
+    product = models.ForeignKey("product.Product", on_delete=models.CASCADE)
+    basket = models.ForeignKey("product.Basket", on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table="product_basket"
+
+
+class OrderHeader(BaseModel):
     user = models.ForeignKey("user.User", on_delete=models.PROTECT, null=True)
     order_status = models.IntegerField(choices=OrderStatus.choices, default=OrderStatus.SUCCESS)
-    basket = models.ForeignKey("order.Basket", on_delete=models.CASCADE, null=True)
-    quantity = models.PositiveIntegerField(null=True)
-    payment_status = models.IntegerField(choices=PaymentStatus)
+    basket = models.OneToOneField("order.Basket", on_delete=models.CASCADE, null=True)
     
     class Meta:
         db_table = "order"
 
+
+class ProductOrder(BaseModel):
+    product = models.ForeignKey("product.Product", on_delete=models.CASCADE)
+    order = models.ForeignKey("order.OrderHeader", on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = "product_order"
