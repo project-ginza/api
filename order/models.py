@@ -12,35 +12,55 @@ class PaymentStatus(models.IntegerChoices):
     CARD = 1     #카드
     DEPOSIT = 2  #무통장입금
 
-class Basket(BaseModel):
-    product = models.ManyToManyField("product.Product", through="order.ProductBasket" ,on_delete=models.PROTECT)
+class BasketHeader(BaseModel):
     user = models.ForeignKey("user.User", on_delete=models.PROTECT)
+    price_sum = models.PositiveIntegerField()
+        
+    class Meta:
+        db_table = "basket_header"
+        
+
+class BasketLine(BaseModel):
+    header = models.ForeignKey("order.BasketHeader", on_delete=models.CASCADE)
+    product = models.ManyToManyField("product.Product", through="order.ProductBasketLine" ,on_delete=models.PROTECT)
+    price = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
     
     class Meta:
-        db_table = "basket"
-        
+        db_table = "basket_line"
 
-class ProductBasket(BaseModel):
+
+class ProductBasketLine(BaseModel):
     product = models.ForeignKey("product.Product", on_delete=models.CASCADE)
-    basket = models.ForeignKey("product.Basket", on_delete=models.CASCADE)
+    basket = models.ForeignKey("product.BasketLine", on_delete=models.CASCADE)
     
     class Meta:
-        db_table="product_basket"
+        db_table="product_basket_line"
 
 
 class OrderHeader(BaseModel):
-    user = models.ForeignKey("user.User", on_delete=models.PROTECT, null=True)
+    user = models.ForeignKey("user.User", on_delete=models.PROTECT)
     order_status = models.IntegerField(choices=OrderStatus.choices, default=OrderStatus.SUCCESS)
-    basket = models.OneToOneField("order.Basket", on_delete=models.CASCADE, null=True)
+    basket = models.OneToOneField("order.BasketHeader", on_delete=models.CASCADE, null=True)
+    price_sum = models.PositiveIntegerField()
     
     class Meta:
-        db_table = "order"
+        db_table = "order_header"
 
 
-class ProductOrder(BaseModel):
+class OrderLine(BaseModel):
+    header = models.ForeignKey("OrderHeader", on_delete=models.CASCADE)
+    product = models.ManyToManyField("product.Product", on_delete=models.PROTECT,through="order.ProductOrderLine")
+    price = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
+    
+    class Meta:
+        db_table = "order_line"
+
+
+class ProductOrderLine(BaseModel):
     product = models.ForeignKey("product.Product", on_delete=models.CASCADE)
-    order = models.ForeignKey("order.OrderHeader", on_delete=models.CASCADE)
+    order = models.ForeignKey("order.OrderLine", on_delete=models.CASCADE)
     
     class Meta:
-        db_table = "product_order"
+        db_table = "product_order_line"
