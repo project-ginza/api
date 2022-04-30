@@ -8,9 +8,11 @@ class OrderStatus(models.IntegerChoices):
     REFUND = 2    #환불신청완료
     SHIPPING = 3  #배송중
 
+
 class PaymentStatus(models.IntegerChoices):
     CARD = 1     #카드
     DEPOSIT = 2  #무통장입금
+
 
 class BasketHeader(BaseModel):
     user = models.ForeignKey("user.User", on_delete=models.PROTECT)
@@ -64,3 +66,4 @@ class ProductOrderLine(BaseModel):
     
     class Meta:
         db_table = "product_order_line"
+        
