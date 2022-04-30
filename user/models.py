@@ -21,10 +21,7 @@ class UserTypeCategory(models.IntegerChoices):
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, user_id, email, name, password=None):
-        if not user_id:
-            raise ValueError('Please enter your ID.')
-
+    def create_user(self, email, name, password=None):
         if not email:
             raise ValueError('Please enter your email.')
 
@@ -32,7 +29,6 @@ class UserManager(BaseUserManager):
             raise ValueError('Please enter your name.')
 
         user = self.model(
-            user_id=user_id,
             email=self.normalize_email(email),
             name=name
         )
@@ -41,9 +37,8 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, user_id, email, name, password):
+    def create_superuser(self, email, name, password):
         user = self.create_user(
-            user_id=user_id,
             email=email,
             name=name,
             password=password
@@ -57,12 +52,6 @@ class User(AbstractBaseUser, BaseModel, PermissionsMixin):
 
     class Meta:
         db_table = 'user'
-
-    user_id = models.CharField(
-        max_length=100,
-        null=False,
-        default=None
-    )
 
     name = models.CharField(
         max_length=100,
@@ -90,7 +79,7 @@ class User(AbstractBaseUser, BaseModel, PermissionsMixin):
     )
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name', 'user_id']
+    REQUIRED_FIELDS = ['name']
 
     objects = UserManager()
 

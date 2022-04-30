@@ -1,0 +1,24 @@
+# docker로 배포해야지 codedeploy 방식은 너무 손이 많이갑니다...
+
+version: 0.0
+os: linux
+files:
+  - source: .
+    destination: /home/ec2-user/api
+hooks:
+  BeforeInstall:
+  - location: scripts/remove_server
+    timeout: 60
+    runas: root
+  Install:
+  - location: scripts/install_app_dependencies
+    runas: root
+    timeout: 60
+  AfterInstall:
+  - location: scripts/setting_env
+    runas: root
+    timeout: 60
+  ApplicationStart:
+  - location: scripts/start_server
+    runas: ec2-user
+    timeout: 60

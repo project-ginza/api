@@ -6,5 +6,4 @@ urlpatterns = [
     path('', include('user.urls')),
     path('admin/', admin.site.urls),
     path('auth/', include('user.urls')),
-    # path('order')
 ]

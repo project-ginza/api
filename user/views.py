@@ -1,19 +1,23 @@
+import binascii
+import json
 import logging
+import os
 
 from django.contrib.auth import authenticate, logout
+from ginza.redis import redis_conn
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
 
 from user.models import User, UserProfile
 
 logger = logging.getLogger('api')
 
+
 class SignupView(APIView):
     def post(self, request, *args, **kwargs):
         try:
             data = request.data
-            user_id = data['user_id']
             email = data['email']
             password = data['password']
             name = data['name']
@@ -26,11 +30,8 @@ class SignupView(APIView):
             user = User.objects.create_user(
                 email=email,
                 password=password,
-                user_id=user_id,
                 name=name
             )
-
-            user.save()
 
             profile = UserProfile.objects.create(
                 user=user,
@@ -40,17 +41,21 @@ class SignupView(APIView):
                 agreed_with_mkt_info_subscription=agreed_with_mkt_info_subscription,
             )
 
-            # profile.save()
-
-            token = Token.objects.create(user=user)
+            token = binascii.hexlify(os.urandom(20)).decode()
+            _dict = {
+                'id': user.id,
+                'email': user.email,
+                'name': user.name
+            }
+            redis_conn.set(token, json.dumps(_dict))
 
             resp = {
-                'token': token.key
+                'token': token
             }
             return Response(resp)
 
         except Exception as e:
-            logger.error('Exception occurred while authentication ' + e)
+            logger.error('An exception occurred while authentication '.format(e))
             raise e
 
 
@@ -61,13 +66,27 @@ class LoginView(APIView):
         password = data['password']
         user = authenticate(email=email, password=password)
         if user is not None:
-            token = Token.objects.get(user=user)
-            return Response({"Token": token.key})
+            token = binascii.hexlify(os.urandom(20)).decode()
+            _dict = {
+                'id': user.id,
+                'email': user.email,
+                'name': user.name
+            }
+            redis_conn.set(token, json.dumps(_dict))
+
+            resp = {
+                'token': token
+            }
+            return Response(resp)
         else:
             return Response(status=401)
 
 
 class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
+        key = request.auth
+        redis_conn.delete(key)
         response = logout(request)
         return Response(response)
