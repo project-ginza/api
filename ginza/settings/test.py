@@ -44,7 +44,7 @@ REDIS_PORT = env.str('REDIS_PORT')
 REDIS_DB = env.str('REDIS_DB')
 REDIS_URL = 'redis://{}:{}/{}'.format(REDIS_HOST, REDIS_PORT, REDIS_DB)
 
-# connect with Redis
+#connect with Redis
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
