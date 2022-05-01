@@ -11,7 +11,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 CUSTOMIZED_APPS = [
     'product',
-    'user'
+    'user',
+    'order'
 ]
 
 THIRD_PARTY_APPS = [
