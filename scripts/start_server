@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd /home/ec2-user/api
+pip install -r requirements.txt
+python3 manage.py makemigrations --settings=ginza.settings.dev
+python3 manage.py migrate --settings=ginza.settings.dev
+python3 manage.py runserver $(hostname -i):8000 --settings=ginza.settings.dev >> ./applogs/ginza.log 2>&1 &
