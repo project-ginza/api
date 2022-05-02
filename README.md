@@ -55,3 +55,16 @@ $python manage.py test --settings=ginza.settings.test
 * > docker-compose up -d
 * > docker ps 
 * > docker-compose down 
+
+
+## 임시조치
+* AWS 인스턴스 ssh 접근에 문제가 발생하면 /home/ec2-user의 권한 정보를 다시 확인해보자
+https://aws.amazon.com/ko/premiumsupport/knowledge-center/ec2-linux-fix-permission-denied-errors/
+
+```bash
+# sudo chown root:root /home
+# sudo chmod 755 /home
+sudo chown ec2-user:ec2-user /home/ec2-user -R
+sudo chmod 700 /home/ec2-user /home/ec2-user/.ssh
+sudo chmod 600 /home/ec2-user/.ssh/authorized_keys
+```
