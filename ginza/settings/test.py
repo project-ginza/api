@@ -14,15 +14,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 ALLOWED_HOSTS = ['*']
 
 # Take environment variables from .env file
-environ.Env.read_env(
-    env_file=os.path.join(BASE_DIR, '.env')
-)
+# environ.Env.read_env(
+#     env_file=os.path.join(BASE_DIR, '.env')
+# )
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY')
+SECRET_KEY = 'just-test-secret-key'
 
 # Database
 # DB_NAME = env.str('DB_NAME')
@@ -35,13 +35,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR + '/db.sqlite3',
-        # 'ATOMIC_REQUESTS': True,
     }
 }
 
-REDIS_HOST = env.str('REDIS_HOST')
-REDIS_PORT = env.str('REDIS_PORT')
-REDIS_DB = env.str('REDIS_DB')
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = '1'
 REDIS_URL = 'redis://{}:{}/{}'.format(REDIS_HOST, REDIS_PORT, REDIS_DB)
 
 #connect with Redis
@@ -55,59 +54,59 @@ CACHES = {
     }
 }
 
-LOGGING_DIRECTORY = env.str('LOGGING_DIRECTORY')
+# LOGGING_DIRECTORY = env.str('LOGGING_DIRECTORY')
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',
-        },
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-    },
-    'formatters': {
-        'django.server': {
-            '()': 'django.utils.log.ServerFormatter',
-            'format': '[{server_time}] {message}',
-            'style': '{',
-        },
-        'standard': {
-            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'INFO',
-            'filters': ['require_debug_true'],
-            'class': 'logging.StreamHandler',
-        },
-        'django.server': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'django.server',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'INFO',
-        },
-        'django.server': {
-            'handlers': ['django.server'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-        'api': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-        'django.db.backends': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-    }
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'filters': {
+#         'require_debug_false': {
+#             '()': 'django.utils.log.RequireDebugFalse',
+#         },
+#         'require_debug_true': {
+#             '()': 'django.utils.log.RequireDebugTrue',
+#         },
+#     },
+#     'formatters': {
+#         'django.server': {
+#             '()': 'django.utils.log.ServerFormatter',
+#             'format': '[{server_time}] {message}',
+#             'style': '{',
+#         },
+#         'standard': {
+#             'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+#         },
+#     },
+#     'handlers': {
+#         'console': {
+#             'level': 'INFO',
+#             'filters': ['require_debug_true'],
+#             'class': 'logging.StreamHandler',
+#         },
+#         'django.server': {
+#             'level': 'INFO',
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'django.server',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': 'INFO',
+#         },
+#         'django.server': {
+#             'handlers': ['django.server'],
+#             'level': 'DEBUG',
+#             'propagate': False,
+#         },
+#         'api': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#             'handlers': ['console'],
+#             'propagate': False,
+#         },
+#     }
+# }
