@@ -3,6 +3,8 @@ name: ginza-dev-action
 on:
   push:
     branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
 
 jobs:
   continuous-integration:
