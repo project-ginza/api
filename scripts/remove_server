@@ -2,3 +2,10 @@
 
 cd /home/ec2-user
 sudo rm -rf ./api
+
+
+sudo chown root:root /home
+sudo chmod 755 /home
+sudo chown ec2-user:ec2-user /home/ec2-user -R
+sudo chmod 700 /home/ec2-user /home/ec2-user/.ssh
+sudo chmod 600 /home/ec2-user/.ssh/authorized_keys
