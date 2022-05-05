@@ -169,8 +169,7 @@ class ProductReviewTestCase(TransactionTestCase):
             test_user: User = User.objects.create(
                 name='tester',
                 email='test@test.com',
-                password=RAW_PASSWORD,
-                user_id='test111'
+                password=RAW_PASSWORD
             )
 
             test_product: Product = Product.objects.create(

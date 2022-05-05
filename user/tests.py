@@ -22,8 +22,7 @@ class UserTestCase(TransactionTestCase):
         User.objects.create_user(
             name='tester',
             email='test@test.com',
-            password=RAW_PASSWORD,
-            user_id="test111"
+            password=RAW_PASSWORD
         )
         print("Set Up Test Models")
 
@@ -56,9 +55,7 @@ class UserTestCase(TransactionTestCase):
         print("============================================")
         print("=> test_create_user_validation_check================")
         with self.assertRaisesMessage(ValueError, EMAIL_VALUE_ERROR_TXT):
-            User.objects.create_user('user-id', None, 'invalid-email')
+            User.objects.create_user(None, 'invalid-email')
         with self.assertRaisesMessage(ValueError, NAME_VALUE_ERROR_TXT):
-            User.objects.create_user('user-id', 'invalid-name@invalid.com', None)
-        with self.assertRaisesMessage(ValueError, USER_ID_VALUE_ERROR_TXT):
-            User.objects.create_user(None, 'invalid-user-id@invalid.com', 'invalid-user-id')
+            User.objects.create_user('invalid-name@invalid.com', None)
         print("============================================")

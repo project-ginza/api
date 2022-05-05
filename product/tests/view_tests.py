@@ -44,7 +44,6 @@ class ProductApiTests(APITestCase):
             name='tester',
             email='test@test.com',
             password=RAW_PASSWORD,
-            user_id='test111'
         )
 
         ProductDetails.objects.create(
@@ -128,8 +127,7 @@ class ProductSearchViewApiTest(APITestCase):
         test_user: User = User.objects.create(
             name='tester',
             email='test@test.com',
-            password=RAW_PASSWORD,
-            user_id='test111'
+            password=RAW_PASSWORD
         )
 
         ProductDetails.objects.create(
