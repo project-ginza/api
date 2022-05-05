@@ -4,4 +4,4 @@ cd /home/ec2-user/api
 python3 -m pip install -r requirements.txt
 python3 manage.py makemigrations --settings=ginza.settings.dev
 python3 manage.py migrate --settings=ginza.settings.dev
-sudo nohup python3 manage.py runserver $(hostname -i):8000 --settings=ginza.settings.dev >> ./applogs/ginza.log 2>&1 &
+nohup python3 manage.py runserver $(hostname -i):8000 --settings=ginza.settings.dev >> ./applogs/ginza.log 2>&1 &
