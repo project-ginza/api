@@ -31,7 +31,6 @@ def test_fixture_all_set():
         name='tester',
         email='test@test.com',
         password=RAW_PASSWORD,
-        user_id='test111'
     )
 
     ProductDetails.objects.create(
