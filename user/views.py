@@ -2,8 +2,11 @@ import binascii
 import json
 import logging
 import os
+import requests
 
 from django.contrib.auth import authenticate, logout
+from django.conf import settings
+from django.shortcuts import redirect
 from ginza.redis import redis_conn
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -90,3 +93,34 @@ class LogoutView(APIView):
         redis_conn.delete(key)
         response = logout(request)
         return Response(response)
+
+
+# reference: https://velog.io/@junsikchoi/Django%EB%A1%9C-%EC%B9%B4%EC%B9%B4%EC%98%A4-%EC%86%8C%EC%85%9C-%EB%A1%9C%EA%B7%B8%EC%9D%B8%EC%9D%84-%ED%95%B4%EB%B3%B4%EC%9E%90
+class KakaoOAuthLoginCallbackView(APIView):
+    def get(self, request):
+        auth_code = request.GET.get('code')
+        kakao_token_api = 'https://kauth.kakao.com/oauth/token'
+        data = {
+            'grant_type': 'authorization_code',
+            'client_id': settings.KAKAO_REST_API_KEY,
+            'redirection_uri': settings.KAKAO_REDIRECT_URI,
+            'client_secret': settings.KAKAO_SECRET_KEY,
+            'code': auth_code
+        }
+        token_response = requests.post(kakao_token_api, data=data)
+        access_token = token_response.json().get('access_token')
+        user_info_response = requests.get('https://kapi.kakao.com/v2/user/me', headers={"Authorization": f'Bearer ${access_token}'})
+        response = {
+            'user_info': user_info_response.json()
+        }
+        return Response(response)
+
+
+class KakaoOAuthLoginView(APIView):
+    def get(self, request):
+        client_id = settings.KAKAO_REST_API_KEY
+        redirect_url = settings.KAKAO_REDIRECT_URI
+        url = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id={0}&redirect_uri={1}".\
+            format(client_id, redirect_url)
+        res = redirect(url)
+        return res
