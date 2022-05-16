@@ -40,8 +40,7 @@ jobs:
   continuous-deployment:
     runs-on: ubuntu-latest
     needs: [ continuous-integration ]
-    if: github.event.pull_request.merged == 'true'
-
+    if: github.event.pull_request.merged == true
     steps:
       # Step 1
       - name: Configure AWS credentials
@@ -53,7 +52,6 @@ jobs:
 
       # Step 2
       - name: Create CodeDeploy Deployment
-        if: github.event.pull_request.merged
         id: deploy
         run: |
           aws deploy create-deployment \
