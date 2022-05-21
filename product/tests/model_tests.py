@@ -13,6 +13,10 @@ SUB_CATEGORY = 'sub-category'
 SAMPLE_PRODUCT = 'product-sample'
 REVIEW_TITLE = 'review-title'
 
+SAMPLE_STOCKS = 5
+EMPTY_STOCKS = 0
+
+
 class CategoryTestCase(TransactionTestCase):
     def setUp(self):
         with CaptureQueriesContext(connection) as ctx:
@@ -59,17 +63,20 @@ class ProductTestCase(TransactionTestCase):
         Product.objects.create(
             name=SAMPLE_PRODUCT,
             short_description="short-description",
-            category=Category.objects.get(name=ROOT_CATEGORY)
+            category=Category.objects.get(name=ROOT_CATEGORY),
+            stocks=SAMPLE_STOCKS
         )
         pass
 
     # TC 1 : 기본 상품 상태(ProductStatus.AVAILABLE) 정상 등록 여부 확인
+    # 재고 Field 추가 반영.
     def test_product_default_status(self):
         with CaptureQueriesContext(connection) as ctx:
             print("============================================")
             print("=> test_product_default_status================")
             searched_product = Product.objects.get(name=SAMPLE_PRODUCT)
             self.assertEqual(ProductStatus.AVAILABLE, searched_product.status)
+            self.assertEqual(SAMPLE_STOCKS, searched_product.stocks)
             print("============================================")
 
 
@@ -180,7 +187,7 @@ class ProductReviewTestCase(TransactionTestCase):
 
             ProductReview.objects.create(
                 product=test_product,
-                title=REVIEW_TITLE+'-01',
+                title=REVIEW_TITLE + '-01',
                 details='details!!!',
                 attached_image_url=None,
                 user=test_user
@@ -188,7 +195,7 @@ class ProductReviewTestCase(TransactionTestCase):
 
             ProductReview.objects.create(
                 product=test_product,
-                title=REVIEW_TITLE+'-02',
+                title=REVIEW_TITLE + '-02',
                 details='details!!!',
                 attached_image_url=None,
                 user=test_user
@@ -237,14 +244,14 @@ class ProductReviewTestCase(TransactionTestCase):
                 "product_review"."created_at" ASC', 
             'time': '0.000'
             """
-            review_list = ProductReview\
-                .objects\
-                .filter(product__name=SAMPLE_PRODUCT)\
-                .select_related('user')\
+            review_list = ProductReview \
+                .objects \
+                .filter(product__name=SAMPLE_PRODUCT) \
+                .select_related('user') \
                 .order_by('created_at')
 
             print(serialize_product_review_list(review_list))
-            self.assertEqual(2,len(review_list))
-            self.assertEqual(REVIEW_TITLE+'-01', review_list[0].title)
+            self.assertEqual(2, len(review_list))
+            self.assertEqual(REVIEW_TITLE + '-01', review_list[0].title)
             self.assertEqual(REVIEW_TITLE + '-02', review_list[1].title)
             print(*ctx.captured_queries, sep='\n')

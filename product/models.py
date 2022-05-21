@@ -62,6 +62,12 @@ class Product(BaseModel):
     # 상품 상태
     status = models.IntegerField(choices=ProductStatus.choices, default=ProductStatus.AVAILABLE)
 
+    # 재고
+    stocks = models.BigIntegerField(
+        null=True,
+        default=None
+    )
+
 
 # 상품 이미지 저장 URL 보관 테이블
 class ProductImage(BaseModel):
