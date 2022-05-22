@@ -72,3 +72,18 @@ def serialize_product_review(product_review: ProductReview) -> Dict[str, Any] | 
 
 def serialize_product_review_list(product_review_list: List[ProductReview]) -> List[Dict[str, Any]]:
     return list(map(serialize_product_review, product_review_list))
+
+
+# ----------------------------
+# ---For Swagger
+# ----------------------------
+
+class PostProductReviewAuthApiViewRequestBodySerializer(serializers.Serializer):
+    review_image_url = serializers.CharField(help_text='Image Url')
+    title = serializers.CharField(help_text='Title')
+    details = serializers.CharField(help_text='상세')
+
+class PutProductReviewAuthApiViewRequestBodySerializer(serializers.Serializer):
+    review_image_url = serializers.CharField(help_text='Image Url')
+    title = serializers.CharField(help_text='Title')
+    details = serializers.CharField(help_text='상세')
