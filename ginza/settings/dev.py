@@ -45,8 +45,7 @@ DATABASES = {
 
 REDIS_HOST = env.str('REDIS_HOST')
 REDIS_PORT = env.str('REDIS_PORT')
-REDIS_DB = env.str('REDIS_DB')
-REDIS_URL = 'redis://{}:{}/{}'.format(REDIS_HOST, REDIS_PORT, REDIS_DB)
+REDIS_URL = 'redis://{}:{}'.format(REDIS_HOST, REDIS_PORT)
 
 # connect with Redis
 CACHES = {

@@ -40,8 +40,7 @@ DATABASES = {
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
-REDIS_DB = '1'
-REDIS_URL = 'redis://{}:{}/{}'.format(REDIS_HOST, REDIS_PORT, REDIS_DB)
+REDIS_URL = 'redis://{}:{}'.format(REDIS_HOST, REDIS_PORT)
 
 #connect with Redis
 CACHES = {
