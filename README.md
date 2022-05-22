@@ -68,3 +68,7 @@ sudo chown ec2-user:ec2-user /home/ec2-user -R
 sudo chmod 700 /home/ec2-user /home/ec2-user/.ssh
 sudo chmod 600 /home/ec2-user/.ssh/authorized_keys
 ```
+
+## API 문서(Swagger)
+
+* local : ```http://localhost:8000/swagger/```

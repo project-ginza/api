@@ -19,6 +19,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_extensions',
+    'drf_yasg',
 ]
 
 INSTALLED_APPS = [
@@ -113,5 +114,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'common.auth.RedisTokenAuthentication',
     ],
-    'EXCEPTION_HANDLER': 'util.utils.custom_exception_handler'
+    'EXCEPTION_HANDLER': 'util.utils.custom_exception_handler',
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
