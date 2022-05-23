@@ -18,6 +18,10 @@ environ.Env.read_env(
     env_file=os.path.join(BASE_DIR, '.env')
 )
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
