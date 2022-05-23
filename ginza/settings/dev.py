@@ -18,12 +18,8 @@ environ.Env.read_env(
     env_file=os.path.join(BASE_DIR, '.env')
 )
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str('SECRET_KEY')
