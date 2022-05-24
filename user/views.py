@@ -7,17 +7,20 @@ import requests
 from django.contrib.auth import authenticate, logout
 from django.conf import settings
 from django.shortcuts import redirect
+from drf_yasg.utils import swagger_auto_schema
 from ginza.redis import redis_conn
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from user.models import User, UserProfile
+from user.serializer import SignupRequestBodySerializer
 
 logger = logging.getLogger('api')
 
 
 class SignupView(APIView):
+    @swagger_auto_schema(request_body=SignupRequestBodySerializer)
     def post(self, request, *args, **kwargs):
         try:
             data = request.data
